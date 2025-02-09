@@ -12,15 +12,20 @@ def main():
     # decode the integers, perform the operation and encode the result. The result will be written to stdout.
     while True:
         command = sys.stdin.readline().strip()
+        #sys.stderr.write('command: ' + command + '\n')
         if command == 'stop':
             break
         elif command == 'add':
             a = sys.stdin.readline().strip()
             b = sys.stdin.readline().strip()
+            #sys.stderr.write('add read 2 \n')
             a = int.from_bytes(base64.b64decode(a))
             b = int.from_bytes(base64.b64decode(b))
             result = a + b
-            result = int.to_bytes(result, math.ceil(result.bit_length() / 8), 'big')
+            n_bytes = math.ceil(result.bit_length() / 8)
+            if n_bytes == 0:
+                n_bytes = 1 
+            result = int.to_bytes(result, n_bytes, 'big')
             result = base64.b64encode(result)
             sys.stdout.buffer.write(result)
             sys.stdout.buffer.write(b'\n')
@@ -28,10 +33,16 @@ def main():
         elif command == 'mult':
             a = sys.stdin.readline().strip()
             b = sys.stdin.readline().strip()
+            #sys.stderr.write('mult read 2 \n')
             a = int.from_bytes(base64.b64decode(a))
             b = int.from_bytes(base64.b64decode(b))
             result = a * b
-            result = int.to_bytes(result, math.ceil(result.bit_length() / 8), 'big')
+            #sys.stderr.write(str(a) + ' ' + str(b) + ' ' + str(result) + '\n');
+            n_bytes = math.ceil(result.bit_length() / 8)
+            if n_bytes == 0:
+                n_bytes = 1 
+            result = int.to_bytes(result, n_bytes, 'big')
+            #sys.stderr.write('bytes' + str(result) + '\n');
             result = base64.b64encode(result)
             sys.stdout.buffer.write(result)
             sys.stdout.buffer.write(b'\n')
